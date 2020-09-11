@@ -1,11 +1,17 @@
+import json
+import itertools
+
+
 
 class Raid:
 
-    def __init__(self, event_name, date, time, description):
+    def __init__(self, event_name, date, time, description, created_by, link):
         self.event_name = event_name
         self.date = date
         self.time = time
         self.description = description
+        self.created_by = created_by
+        self.link = link
         self.tank = []
         self.hunter = []
         self.priest = []
@@ -45,42 +51,59 @@ class Raid:
             self.bench.append(name)
         elif role == "absence":
             self.absence.append(name)
-
-    def get_event_name():
+                    
+    def get_event_name(self):
         return self.event_name
 
-    def get_tanks():
+    def get_date(self):
+        return self.date
+
+    def get_tanks(self):
         return self.tank
 
-    def get_hunters():
+    def get_hunters(self):
         return self.hunter
 
-    def get_priests():
+    def get_priests(self):
         return self.priest
 
-    def get_warriors():
+    def get_warriors(self):
         return self.warrior
 
-    def get_mages():
+    def get_mages(self):
         return self.mage
 
-    def get_paladins():
+    def get_paladins(self):
         return self.paladin
 
-    def get_rogues():
+    def get_rogues(self):
         return self.rogue
 
-    def get_warlocks():
+    def get_warlocks(self):
         return self.warlock
 
-    def get_druids():
+    def get_druids(self):
         return self.druid
 
-    def get_late():
+    def get_late(self):
         return self.late
 
-    def get_bench():
+    def get_bench(self):
         return self.bench
 
-    def get_absence():
+    def get_absence(self):
         return self.absence
+
+    def get_attendees(self):
+        attendees = list(itertools.chain(self.tank, self.hunter, self.priest, self.warrior, self.mage, self.paladin, self.rogue, self.warlock, self.druid))
+        return attendees
+
+
+    def export_attendence_to_json(self):
+        json_export = {
+            "event_name": self.get_event_name(),
+            "date": self.get_date(),
+            "attendees": self.get_attendees(),
+        }
+        return json_export
+

@@ -1,46 +1,32 @@
-from raid import Raid
-import csv
+from extractor import raid_extractor, raid_extractor_by_character, find_character, clean_date
+import click
+import json
+import datetime
 
 
-def clean_name(str):
-    name = str[2:]
-    name = name[:-2]
+@click.command()
+@click.option('-e','--extractor', is_flag=True, help='Extract data from dump.csv file')
+@click.option('-f','--find', help='Find attendence for a specific character')
+@click.option('-b','--before-date', default=datetime.datetime.now(), help='Find attendence before a specific date with format: day-month-year. Example: -b 11-09-2020')
+@click.option('-a','--after-date', default=None, help='Find attendence after a specific date with format: day-month-year. Example: -b 21-06-2020')
+@click.option('-c','--character', is_flag=True, help='Results of attendence by characters')
+def selector(extractor, find, before_date, after_date, character):
 
-    return name
+    date_range = clean_date(after_date,before_date)
 
-file = open('../dump.csv')
-fileReader = csv.reader(file)
-data = list(fileReader)
+    if extractor:
+        click.echo(json.dumps(raid_extractor(date_range), indent=4, sort_keys=True, ensure_ascii=False))
 
-raids = []
+    elif character:
+        click.echo('Results by character')
+        click.echo(json.dumps(raid_extractor_by_character(date_range), indent=4, sort_keys=True, ensure_ascii=False))
+    
+    elif find:
+        click.echo('Find ' + find)
+        click.echo(json.dumps(find_character(find, date_range), indent=4, sort_keys=True, ensure_ascii=False))
 
-for row in range(len(data)):
-    for x in data[row]:
-        if x == "-- start --":
+    else:
+        click.echo('You need to choose at least one argument. Please see --help')
 
-            event_name = data[row+2][0]
-            event_date = data[row+2][1]
-            event_time = data[row+2][2]
-            event_description = data[row+2][3]
-
-            # Create a new raid
-            raid_obj = Raid(event_name, event_date, event_time, event_description)
-            raids.append(raid_obj)
-
-            #Iterate through all roles
-            i = 3
-
-            while i < 14:
-                for num_tank in range(len(data[row+i])):
-                    if num_tank == 0:
-                        role = str(data[row+i][num_tank])
-                        continue
-
-                    temp_str = str(data[row+i][num_tank]).split("--")
-
-                    if len(temp_str) > 1:
-                        raid_obj.add_attendee(role, clean_name(temp_str[2]))
-
-                i += 1
-
-print(len(raids))
+if __name__ == '__main__':
+    selector()
