@@ -2,3 +2,4 @@
 .vscode
 dump.csv
 raid-helper-parser.code-workspace
+__pycache__
