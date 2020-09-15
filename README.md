@@ -2,7 +2,9 @@
 
 Simple, under development, Raid-Helper python parser.
 
-The point of this parser is to be able to retrieve, and store in a database, which people have participated in a raid.
+The point of this parser is to be able to retrieve which people have participated in a raid.
+
+Getting CSV file: https://raid-helper.com/commands-organization
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

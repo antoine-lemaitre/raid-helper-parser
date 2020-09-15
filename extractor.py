@@ -3,6 +3,7 @@ import csv
 import datetime
 import click
 import sys
+import json
 
 
 def clean_name(str):
@@ -110,9 +111,24 @@ def raid_extractor_by_character(date_range):
 
 def find_character(find, date_range):
     extracted = raid_extractor_by_character(date_range)
+
     attendence = {}
+
     for attendee in extracted.keys():
         if find.lower() in attendee.lower():
-            attendence.setdefault(attendee, []).append(extracted[attendee])
+            for presence in extracted[attendee]:
+                attendence.setdefault(attendee, []).append(presence)
+
 
     return attendence
+
+def find_character_with_attendance_stats(player_stats, date_range):
+    raid_attendance = 0
+    raid_number = len(raid_extractor(date_range))
+    character = find_character(player_stats, date_range)
+
+    for pseudo in character.keys():
+        raid_attendance += len(character[pseudo])
+
+    stats = raid_attendance / raid_number
+    return stats
