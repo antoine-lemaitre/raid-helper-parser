@@ -109,6 +109,7 @@ def raid_extractor_by_character(date_range):
 
     return extracted
 
+
 def find_character(find, date_range):
     extracted = raid_extractor_by_character(date_range)
 
@@ -118,8 +119,7 @@ def find_character(find, date_range):
         if find.lower() in attendee.lower():
             for presence in extracted[attendee]:
                 attendence.setdefault(attendee, []).append(presence)
-
-
+    
     return attendence
 
 def find_character_with_attendance_stats(player_stats, date_range):
@@ -132,3 +132,16 @@ def find_character_with_attendance_stats(player_stats, date_range):
 
     stats = raid_attendance / raid_number
     return stats
+
+
+def raid_attendance_statistics(date_range):
+    extracted = raid_extractor_by_character(date_range)
+    raid_number = len(raid_extractor(date_range))
+
+    attendence = {}
+
+    for attendee in extracted.keys():
+        attendee_presence = len(extracted[attendee])
+        attendence.setdefault(attendee, []).append("{0:.0%}".format(attendee_presence / raid_number))
+
+    return attendence
