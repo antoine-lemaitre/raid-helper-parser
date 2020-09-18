@@ -142,6 +142,6 @@ def raid_attendance_statistics(date_range):
 
     for attendee in extracted.keys():
         attendee_presence = len(extracted[attendee])
-        attendence.setdefault(attendee, []).append("{0:.0%}".format(attendee_presence / raid_number))
+        attendence[attendee] = "{0:.0%}".format(attendee_presence / raid_number)
 
     return attendence
